@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
   search(pagination?: any) {
     this.noDataFound = false;
     this.errMsg = '';
-    if(!this.bookSearch.value) return;
+    if(!this.bookSearch.value) return this.clearSearch();
     this.isLoading = true;
     if(this.searchRequest) {
       this.searchRequest.unsubscribe();
