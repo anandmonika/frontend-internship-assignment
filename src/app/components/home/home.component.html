@@ -1,23 +1,75 @@
-<div class="header">
-  <div class="tw-text-24-px tw-font-600">Open Books Library</div>
-  <div class="search-button">
-    <mat-icon class="tw-mt-16-px" aria-label="Search Icon">search</mat-icon>
-    <input
-      [formControl]="bookSearch"
-      name="searchKey"
-      type="text"
-      placeholder="Search Books"
-      class="tw-border-0 tw-bg-inherit"
-    >
-  </div>
-</div>
-<div class="tw-flex tw-flex-row tw-m-24-px">
-  <section class="trending-subjects">
-    <div class="tw-font-600 tw-text-24-px">Trending Subjects</div>
-    <ul class="tw-list-none tw-pl-0">
-      <li class="tw-text-16-px tw-cursor-pointer tw-p-12-px" *ngFor="let subject of trendingSubjects" routerLink="/trending-subject/{{ subject.name }}">
-        {{ subject.name }}
-      </li>
-    </ul>
-  </section>
-</div>
+<mat-toolbar color="primary">
+  <span class="tw-text-24-px tw-font-600">Open Books Library</span>
+  <span class="fill-remaining-space"></span>
+    <mat-form-field appearance="fill" class="tw-mt-6">
+      <mat-select [formControl]="searchOption">
+        <mat-option value="q">All</mat-option>
+        <mat-option value="title">Title</mat-option>
+        <mat-option value="author">Author</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="tw-ml-2 tw-mt-6">
+      <mat-icon matPrefix color="primary">search</mat-icon>
+      <input  [formControl]="bookSearch" type="text" matInput placeholder="Search Books">
+      <button *ngIf="bookSearch.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
+        <mat-icon color="primary">close</mat-icon>
+      </button>
+    </mat-form-field>
+</mat-toolbar>
+
+<mat-drawer-container class="page-container">
+  <mat-drawer mode="side" opened>
+      <section class="trending-subjects">
+        <div class="tw-font-600 tw-text-24-px">Trending Subjects</div>
+        <ul class="tw-list-none tw-pl-0">
+          <li class="tw-text-16-px tw-cursor-pointer tw-p-12-px" *ngFor="let subject of trendingSubjects" routerLink="/trending-subject/{{ subject.name }}">
+            {{ subject.name }}
+          </li>
+        </ul>
+      </section>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full" *ngIf="isLoading">
+      <mat-spinner></mat-spinner>
+      <p>Searching Books...</p>
+    </div>
+
+    <div *ngIf="!isLoading && noDataFound" class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full">
+      <mat-card class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-6/12">
+        <mat-card-content>
+          <img src="../../../assets/no-data.svg" height="200" />
+          <h4>No Books Found for Query: {{ bookSearch.value }}</h4>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div *ngIf="!isLoading && errMsg" class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full">
+      <mat-card class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-6/12">
+        <mat-card-content>
+          <img src="../../../assets/no-data.svg" height="200" />
+          <h4>Request failed with Error: {{ errMsg }}</h4>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div *ngIf="!isLoading && allBooks.length > 0">
+ 
+      <front-end-internship-assignment-table-view
+      [booksList]="allBooks"
+      [totalBooks]="totalBooks"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (onPageChange)="pageChangeHandler($event)"
+      ></front-end-internship-assignment-table-view>  
+    </div>
+
+    <div *ngIf="!isLoading && allBooks.length === 0 && !noDataFound && !errMsg" class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full">
+      <mat-card class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-6/12">
+        <mat-card-content>
+          <img src="../../../assets/search-books.svg" height="200" />
+          <h4>Searched Books will appear here</h4>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

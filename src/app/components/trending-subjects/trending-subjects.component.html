@@ -1,6 +1,27 @@
-<div *ngIf="allBooks.length > 0">
+<div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+  <p>Loading Books...</p>
+</div>
+
+<div *ngIf="!isLoading && allBooks.length === 0" class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full">
+  <mat-card class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-6/12">
+    <mat-card-content>
+      <img src="../../../assets/no-data.svg" height="200" />
+      <h4>No Books Found for Subject: {{ subjectName }}</h4>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="!isLoading && allBooks.length > 0">
+ 
   <front-end-internship-assignment-table-view
   [booksList]="allBooks"
   [subjectName]="subjectName"
+  [totalBooks]="totalBooks"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  (onPageChange)="handlePageChange($event)"
   ></front-end-internship-assignment-table-view>
+
+
 </div>

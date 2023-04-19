@@ -29,3 +29,11 @@
   tw-rounded-4-px
   tw-shadow-lg
 }
+
+.page-container {
+  height: 80vh;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}

@@ -52,3 +52,13 @@ export interface BookResponse {
   work_count: number;
   works: Book[];
 }
+
+export interface SearchResponse {
+  numFound: number,
+  start: number,
+  numFoundExact: boolean,
+  docs: Book[],
+  num_found: number,
+  q: string,
+  offset: number
+}
